@@ -1,0 +1,21 @@
+theme = "jellybeans"
+
+[editor]
+line-number = "relative"
+true-color = true
+bufferline = "multiple"
+auto-info = false
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[keys.normal]
+S-q = ":buffer-close"
+S-right = ":buffer-next"
+S-left = ":buffer-previous"
+
+[keys.normal.space]
+i = ":toggle lsp.display-inlay-hints"
+o = ":toggle auto-info"

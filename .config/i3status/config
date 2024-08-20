@@ -1,0 +1,13 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+general {
+        colors = true
+        interval = 60
+}
+
+order += "time"
+
+time {
+        format = "%a %d %b, %I:%M %p"
+}

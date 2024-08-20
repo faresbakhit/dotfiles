@@ -1,0 +1,120 @@
+#!/bin/bash
+
+#
+# ~/.bashrc
+# Interactive non-login bash shell start-up script
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+#
+# Bash configuration
+#
+
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}"/bash_history
+HISTCONTROL=ignorespace:ignoredups:erasedups
+HISTTIMEFORMAT="%F %T: "
+
+shopt -s histappend
+shopt -s globstar
+
+#
+# User functions
+#
+
+titled() {
+    # Restore window title from the stack at return
+    trap 'printf "\033[23;2t"' RETURN INT TERM
+    # 1. Save window title on the stack
+    # 2. Change window title to $1
+    printf "\033[22;2t\033]2;$1\07"
+    $@
+}
+
+mkcd() {
+    mkdir "$@" || return
+    shift "$(( $# - 1 ))"
+    cd -- "$1"
+}
+
+extract() {
+    if [[ -f $1 ]] ; then
+        case $1 in
+            *.tar.bz2)   tar xjf $1     ;;
+            *.tar.gz)    tar xzf $1     ;;
+            *.bz2)       bunzip2 $1     ;;
+            *.rar)       unrar e $1     ;;
+            *.gz)        gunzip $1      ;;
+            *.tar)       tar xf $1      ;;
+            *.tbz2)      tar xjf $1     ;;
+            *.tgz)       tar xzf $1     ;;
+            *.zip)       unzip $1       ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1        ;;
+            *)  echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+#
+# Application specific non-login bash shell scripts.
+#
+
+if [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc.d" ]; then
+    for f in "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bashrc.d"/*.sh; do
+        [ -r "$f" ] && . "$f"
+    done
+    unset f
+fi
+
+#
+# Bash aliases
+#
+
+[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bash_aliases" ] && . "${XDG_CONFIG_HOME:-$HOME/.config}/bash/bash_aliases"
+
+#
+# Misc.
+#
+
+export GPG_TTY=$(tty)
+
+#
+# Bash prompt
+#
+
+__prompt_exit_status()
+{
+    local exit=$?
+    if [ $exit != 0 ]; then
+        printf " $exit!"
+    fi
+    return $exit
+}
+
+# newline before prompt message
+PROMPT_COMMAND='PROMPT_COMMAND=echo'
+alias clear="unset PROMPT_COMMAND; clear; PROMPT_COMMAND='PROMPT_COMMAND=echo'"
+
+# [gray] 24-hour HH:MM:SS format time
+PS1='\[\e[90m\]\t'
+
+# [green] current working directory
+PS1+='\[\e[32m\] \w'
+
+# red, (git-branch)
+if type __git_ps1 &>/dev/null; then
+    PS1+='\[\e[31m\]$(GIT_PS1_SHOWDIRTYSTATE=1 __git_ps1)'
+fi
+
+# [yellow] last command exit status if it wasn't successful
+PS1+='\[\e[33m\]$(__prompt_exit_status)'
+
+# [reset] newline + a '#' if root, otherwise a '$'
+PS1+='\[\e[0m\]\n\$ '
+
+# Display a message on interactive shell start
+echo && agetty -f ~/.config/agetty/issue --show-issue

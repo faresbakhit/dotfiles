@@ -1,0 +1,61 @@
+#!/bin/sh
+
+#
+# ~/.profile
+# Login POSIX-compliant shell start-up script
+#
+
+# Append ~/.local/bin to $PATH if it doesn't exist.
+case ":$PATH:" in
+    *:"$HOME/.local/bin":*)
+        ;;
+    *)
+        PATH="${PATH:+$PATH:}$HOME/.local/bin"
+esac
+
+#
+# XDG Base Directory specification environment variables
+# https://specifications.freedesktop.org/basedir-spec/latest/
+#
+
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+# `XDG_STATE_HOME` is for data that represent actions history or
+# the state of an application (logs, history, recently used files, …),
+# and generally data that is *not reproducible*, unlike `XDG_CACHE_HOME`
+# that should be used for caching *reproduceible* data.
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR=/run/user/$(id -u)
+    if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+        # We don't have write permission in `/run/user` but we do in `/tmp`.
+        export XDG_RUNTIME_DIR=/tmp/run/user/$(id -u)
+        mkdir -p "$XDG_RUNTIME_DIR"
+    fi
+    # We (maybe) own `XDG_RUNTIME_DIR` and it's (maybe) already 0700, but if we don't
+    # own it then this is good because we will get an error and if we own it and it's
+    # not set to 0700, we will be setting it, so it's a win-win.
+    chmod 0700 "$XDG_RUNTIME_DIR"
+fi
+
+#
+# $XDG_CONFIG_HOME/sh/profile.d/
+# Applications login shell configuration scripts directory.
+#
+
+if [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/sh/profile.d" ]; then
+    for f in "${XDG_CONFIG_HOME:-$HOME/.config}/sh/profile.d"/*.sh; do
+        [ -r "$f" ] && . "$f"
+    done
+    unset f
+fi
+
+# Start an X session if we are a login shell at tty1.
+if [ "$(fgconsole 2>/dev/null)" = "1" ]; then
+    exec startx -- vt1 &>/dev/null
+fi
+
+# We are on ttyN where N =/ 1, we will be having an interactive session.
+[ -f $HOME/.bashrc ] && . $HOME/.bashrc

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# ~/.config/xorg/xinitrc
+# Xorg's xinit start-up shell script
+#
+# https://wiki.archlinux.org/title/xinit
+#
+
+remapd &
+unclutter &
+picom &
+
+feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/che-guevara.jpg
+
+dbus-update-activation-environment --all
+exec dbus-launch --exit-with-session i3

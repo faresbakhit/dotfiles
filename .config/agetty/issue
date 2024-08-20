@@ -1,0 +1,3 @@
+	\e{lightgreen}\e{reverse} \S \e{reset} \e{lightgreen}\d (\l)\e{reset}
+	\e{lightgreen}\e{halfbright}\e{reverse}   Kernel   \e{reset} \e{lightgreen}\e{halfbright}\r (\m)\e{reset}
+

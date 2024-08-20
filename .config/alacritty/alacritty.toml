@@ -1,0 +1,40 @@
+[window]
+dynamic_padding = true
+padding.x = 15
+padding.y = 15
+
+[keyboard]
+bindings = [
+  { key = "PageUp", mods = "Shift", action = "ScrollPageUp" },
+  { key = "PageDown", mods = "Shift", action = "ScrollPageDown" },
+  { key = "ArrowUp", mods = "Shift", action = "ScrollLineUp" },
+  { key = "ArrowDown", mods = "Shift", action = "ScrollLineDown" },
+]
+
+[colors.primary]
+background = "#151515"
+foreground = "#dedede"
+
+[colors.normal]
+black = "#929292"
+red = "#e27373"
+green = "#94b979"
+yellow = "#ffba7b"
+blue = "#97bedc"
+magenta = "#e1c0fa"
+cyan = "#00988e"
+white = "#dedede"
+
+[colors.bright]
+black = "#bdbdbd"
+red = "#ffa1a1"
+green = "#bddeab"
+yellow = "#ffdca0"
+blue = "#b1d8f6"
+magenta = "#fbdaff"
+cyan = "#1ab2a8"
+white = "#ffffff"
+
+[colors.selection]
+text = "#f2aac7"
+background = "#37232d"

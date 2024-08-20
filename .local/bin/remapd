@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#
+# .local/bin/remapd
+# Monitors USB devices and invokes `remaps` when one is inserted.
+#
+# Adapted from https://github.com/LukeSmithxyz
+#
+
+while true; do
+	remaps
+	grep -qP -m1 '\sbind.+\(usb\)' <(udevadm monitor -u -s input -s usb)
+done

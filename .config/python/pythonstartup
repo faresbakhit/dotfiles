@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+#
+# ~/.config/python/pythonstartup
+# Python interactive-shell start-up script
+#
+# https://docs.python.org/3/using/cmdline.html
+#
+
+### Move ~/.python_history to $XDG_STATE_HOME:-$HOME/.local/state
+
+import atexit
+import os
+import readline
+
+history_file = os.path.expanduser("~/.local/state")
+history_file = os.environ.get("XDG_STATE_HOME", history_file)
+history_file = os.path.join(history_file, "python_history")
+
+try:
+    readline.read_history_file(history_file)
+except FileNotFoundError:
+    pass
+
+# Prevents creation of default history if custom is empty
+if readline.get_current_history_length() == 0:
+    readline.add_history("")
+
+atexit.register(readline.write_history_file, history_file)
+del (atexit, os, readline, history_file)
+
+### Common REPL imports
+
+import math as math
+import os as os
+import random as random
+import sys as sys
+from pathlib import Path as Path
+from pprint import pp as pp
+
+print(">>> import os")
+print(">>> import sys")
+print(">>> import math")
+print(">>> import random")
+print(">>>")
+print(">>> from pathlib import Path")
+print(">>> from pprint import pp")
+print(">>>")

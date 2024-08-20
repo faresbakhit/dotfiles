@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#
+# .local/bin/remaps
+# Remap caps-lock to super on hold and escape on press.
+#
+# Adapted from https://github.com/LukeSmithxyz
+#
+
+xmodmap "${XDG_CONFIG_HOME:-$HOME/.config}/xorg/xmodmap"
+pkill xcape; xcape -e 'Hyper_L=Escape'
