@@ -5,5 +5,6 @@
 # Chromium configurations login shell script
 #
 
+export BROWSER=chromium
 export GOOGLE_API_KEY=0
 export CHROME_FLAGS="--disable-features=UserAgentClientHint"

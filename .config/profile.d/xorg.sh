@@ -8,5 +8,5 @@
 # https://wiki.archlinux.org/title/xinit
 #
 
-export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}"/xorg/xinitrc
+export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}"/X11/xinitrc
 export XAUTHORITY="${XDG_RUNTIME_DIR:-$HOME}/Xauthority"

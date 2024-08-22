@@ -1,1 +1,1 @@
-.config/sh/profile
+.config/profile

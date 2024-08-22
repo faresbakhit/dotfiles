@@ -1,20 +1,9 @@
 #!/bin/sh
 
 #
-# ~/.profile
-# Login POSIX-compliant shell start-up script
-#
-
-# Append ~/.local/bin to $PATH if it doesn't exist.
-case ":$PATH:" in
-    *:"$HOME/.local/bin":*)
-        ;;
-    *)
-        PATH="${PATH:+$PATH:}$HOME/.local/bin"
-esac
-
-#
+# ~/.config/sh/profile.d/xdg.sh
 # XDG Base Directory specification environment variables
+#
 # https://specifications.freedesktop.org/basedir-spec/latest/
 #
 
@@ -39,23 +28,3 @@ if [ -z "$XDG_RUNTIME_DIR" ]; then
     # not set to 0700, we will be setting it, so it's a win-win.
     chmod 0700 "$XDG_RUNTIME_DIR"
 fi
-
-#
-# $XDG_CONFIG_HOME/sh/profile.d/
-# Applications login shell configuration scripts directory.
-#
-
-if [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/sh/profile.d" ]; then
-    for f in "${XDG_CONFIG_HOME:-$HOME/.config}/sh/profile.d"/*.sh; do
-        [ -r "$f" ] && . "$f"
-    done
-    unset f
-fi
-
-# Start an X session if we are a login shell at tty1.
-if [ "$(fgconsole 2>/dev/null)" = "1" ]; then
-    exec startx -- vt1 &>/dev/null
-fi
-
-# We are on ttyN where N =/ 1, we will be having an interactive session.
-[ -f $HOME/.bashrc ] && . $HOME/.bashrc

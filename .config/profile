@@ -1,0 +1,34 @@
+#!/bin/sh
+
+#
+# ~/.profile
+# Login POSIX-compliant shell start-up script
+#
+
+# Append ~/.local/bin to $PATH if it doesn't exist.
+case ":$PATH:" in
+    *:"$HOME/.local/bin":*)
+        ;;
+    *)
+        PATH="${PATH:+$PATH:}$HOME/.local/bin"
+esac
+
+#
+# XDG_CONFIG_HOME/sh/profile.d/
+# Applications login shell configuration scripts directory.
+#
+
+if [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/profile.d" ]; then
+    for f in "${XDG_CONFIG_HOME:-$HOME/.config}/profile.d"/*.sh; do
+        [ -r "$f" ] && . "$f"
+    done
+    unset f
+fi
+
+# Start an X session if we are a login shell at tty1.
+if [ "$(fgconsole 2>/dev/null)" = "1" ]; then
+    exec startx -- vt1 &>/dev/null
+fi
+
+# We are on ttyN where N =/ 1, we will be having an interactive session.
+[ -f $HOME/.bashrc ] && . $HOME/.bashrc
